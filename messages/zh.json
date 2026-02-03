@@ -1,0 +1,58 @@
+{
+    "community": {
+        "title": "社区",
+        "write": "发帖",
+        "backToCommunity": "← 返回社区",
+        "comments": "评论",
+        "noPostsYet": "还没有帖子。成为第一个分享的人！",
+        "postedBy": "发布者",
+        "writeComment": "写评论...",
+        "submit": "提交",
+        "submitting": "提交中...",
+        "delete": "删除"
+    },
+    "categories": {
+        "all": "全部",
+        "visa": "签证",
+        "jobs": "工作",
+        "life": "生活",
+        "qa": "问答"
+    },
+    "auth": {
+        "login": "登录",
+        "signup": "注册",
+        "logout": "退出登录",
+        "loginRequired": "需要登录才能执行此操作。",
+        "continueWithGoogle": "使用 Google 继续"
+    },
+    "landing": {
+        "hero": {
+            "title": "您在韩国的社区中心",
+            "subtitle": "与其他外国人联系，获取签证帮助，找工作，在韩国生活。",
+            "cta": "加入社区"
+        },
+        "features": {
+            "community": {
+                "title": "社区",
+                "description": "与数千名生活在韩国的外国人联系"
+            },
+            "visa": {
+                "title": "签证帮助",
+                "description": "跟踪您的签证状态，获取续签提醒"
+            },
+            "jobs": {
+                "title": "工作",
+                "description": "为外国人寻找工作和兼职"
+            }
+        }
+    },
+    "common": {
+        "loading": "加载中...",
+        "error": "出了点问题",
+        "save": "保存",
+        "cancel": "取消",
+        "confirm": "确认",
+        "anonymous": "匿名",
+        "global": "全球"
+    }
+}

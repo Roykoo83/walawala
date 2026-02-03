@@ -1,0 +1,58 @@
+{
+    "community": {
+        "title": "Community",
+        "write": "Write",
+        "backToCommunity": "← Back to Community",
+        "comments": "Comments",
+        "noPostsYet": "No posts yet. Be the first to share!",
+        "postedBy": "Posted by",
+        "writeComment": "Write a comment...",
+        "submit": "Submit",
+        "submitting": "Submitting...",
+        "delete": "Delete"
+    },
+    "categories": {
+        "all": "ALL",
+        "visa": "VISA",
+        "jobs": "JOBS",
+        "life": "LIFE",
+        "qa": "Q&A"
+    },
+    "auth": {
+        "login": "Login",
+        "signup": "Sign Up",
+        "logout": "Logout",
+        "loginRequired": "Login required to perform this action.",
+        "continueWithGoogle": "Continue with Google"
+    },
+    "landing": {
+        "hero": {
+            "title": "Your Community Hub in Korea",
+            "subtitle": "Connect with fellow foreigners, get visa help, find jobs, and navigate life in Korea.",
+            "cta": "Join the Community"
+        },
+        "features": {
+            "community": {
+                "title": "Community",
+                "description": "Connect with thousands of foreigners living in Korea"
+            },
+            "visa": {
+                "title": "Visa Help",
+                "description": "Track your visa status, get renewal reminders"
+            },
+            "jobs": {
+                "title": "Jobs",
+                "description": "Find jobs and part-time work for foreigners"
+            }
+        }
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "Something went wrong",
+        "save": "Save",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "anonymous": "Anonymous",
+        "global": "Global"
+    }
+}

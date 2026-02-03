@@ -1,0 +1,58 @@
+{
+    "community": {
+        "title": "Cộng đồng",
+        "write": "Viết",
+        "backToCommunity": "← Quay lại Cộng đồng",
+        "comments": "Bình luận",
+        "noPostsYet": "Chưa có bài đăng. Hãy là người đầu tiên chia sẻ!",
+        "postedBy": "Đăng bởi",
+        "writeComment": "Viết bình luận...",
+        "submit": "Gửi",
+        "submitting": "Đang gửi...",
+        "delete": "Xóa"
+    },
+    "categories": {
+        "all": "TẤT CẢ",
+        "visa": "VISA",
+        "jobs": "VIỆC LÀM",
+        "life": "CUỘC SỐNG",
+        "qa": "HỎI ĐÁP"
+    },
+    "auth": {
+        "login": "Đăng nhập",
+        "signup": "Đăng ký",
+        "logout": "Đăng xuất",
+        "loginRequired": "Cần đăng nhập để thực hiện hành động này.",
+        "continueWithGoogle": "Tiếp tục với Google"
+    },
+    "landing": {
+        "hero": {
+            "title": "Cộng đồng của bạn tại Hàn Quốc",
+            "subtitle": "Kết nối với người nước ngoài, nhận hỗ trợ visa, tìm việc làm và khám phá cuộc sống ở Hàn Quốc.",
+            "cta": "Tham gia Cộng đồng"
+        },
+        "features": {
+            "community": {
+                "title": "Cộng đồng",
+                "description": "Kết nối với hàng nghìn người nước ngoài sống ở Hàn Quốc"
+            },
+            "visa": {
+                "title": "Hỗ trợ Visa",
+                "description": "Theo dõi tình trạng visa, nhận nhắc nhở gia hạn"
+            },
+            "jobs": {
+                "title": "Việc làm",
+                "description": "Tìm việc làm và công việc bán thời gian cho người nước ngoài"
+            }
+        }
+    },
+    "common": {
+        "loading": "Đang tải...",
+        "error": "Đã xảy ra lỗi",
+        "save": "Lưu",
+        "cancel": "Hủy",
+        "confirm": "Xác nhận",
+        "anonymous": "Ẩn danh",
+        "global": "Toàn cầu"
+    }
+}

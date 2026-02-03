@@ -18,7 +18,7 @@ const commentSchema = z.object({
 
 export async function createPost(formData: FormData) {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
@@ -44,7 +44,7 @@ export async function createPost(formData: FormData) {
       if (file.size > 0) {
         const fileExt = file.name.split('.').pop()
         const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
-        
+
         const { error: uploadError } = await supabase.storage
           .from('images')
           .upload(fileName, file)
@@ -57,7 +57,7 @@ export async function createPost(formData: FormData) {
         const { data: { publicUrl } } = supabase.storage
           .from('images')
           .getPublicUrl(fileName)
-        
+
         imageUrls.push(publicUrl)
       }
     }
@@ -81,7 +81,7 @@ export async function createPost(formData: FormData) {
 
 export async function createComment(formData: FormData) {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
@@ -115,9 +115,9 @@ export async function createComment(formData: FormData) {
 
 export async function deletePost(postId: string) {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   if (!user) {
     return { error: '권한이 없습니다.' }
   }
@@ -157,4 +157,41 @@ export async function deleteComment(commentId: string, postId: string) {
   }
 
   revalidatePath(`/community/${postId}`)
+}
+
+export async function toggleLike(postId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: '로그인이 필요합니다.', liked: false }
+  }
+
+  // Check if already liked
+  const { data: existingLike } = await supabase
+    .from('likes')
+    .select('id')
+    .eq('post_id', postId)
+    .eq('user_id', user.id)
+    .single()
+
+  if (existingLike) {
+    // Unlike
+    await supabase
+      .from('likes')
+      .delete()
+      .eq('post_id', postId)
+      .eq('user_id', user.id)
+
+    revalidatePath('/community')
+    return { liked: false }
+  } else {
+    // Like
+    await supabase
+      .from('likes')
+      .insert({ post_id: postId, user_id: user.id })
+
+    revalidatePath('/community')
+    return { liked: true }
+  }
 }

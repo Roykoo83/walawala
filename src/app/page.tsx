@@ -1,25 +1,107 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { ArrowRight, Globe, MessageCircle, ShieldCheck } from 'lucide-react'
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
-      <div className="text-center space-y-6 max-w-lg px-4">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-          Welcome to WalaWala
-        </h1>
-        <p className="text-lg text-gray-600">
-          Your community hub for questions, visa help, and connections.
-        </p>
-        <div className="flex justify-center gap-4">
-          <Link href="/community">
-            <Button size="lg">Go to Community Board</Button>
-          </Link>
-          <Link href="/login">
-            <Button variant="outline" size="lg">Login</Button>
-          </Link>
+    <div className="flex min-h-screen flex-col bg-white">
+      {/* Navigation */}
+      <header className="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-bold text-brand-primary">WalaWala</span>
+          </div>
+          <div className="flex gap-4">
+            <Link href="/login">
+              <span className="text-sm font-medium text-gray-600 hover:text-brand-primary px-3 py-2">Login</span>
+            </Link>
+            <Link href="/signup">
+              <Button size="sm" className="bg-brand-primary hover:bg-brand-primary/90 text-white">Sign Up</Button>
+            </Link>
+          </div>
         </div>
-      </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4 text-center bg-gradient-to-b from-gray-50 to-white">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="container mx-auto max-w-3xl"
+        >
+          <span className="inline-block py-1 px-3 rounded-full bg-brand-accent/20 text-brand-dark text-xs font-bold mb-6 tracking-wide text-brand-primary">
+            FOR FOREIGNERS IN KOREA 🇰🇷
+          </span>
+          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+            Your Safe Playground <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-accent">
+              WalaWala
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+            Ask questions, manage your visa, and connect with friends who understand your journey in Korea.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/signup">
+              <Button size="lg" className="w-full sm:w-auto bg-brand-primary hover:bg-brand-primary/90 text-white h-12 px-8 text-lg shadow-lg shadow-brand-primary/20">
+                Get Started
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+            <Link href="/community">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto h-12 px-8 text-lg">
+                Browse Community
+              </Button>
+            </Link>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="grid md:grid-cols-3 gap-8">
+            <FeatureCard
+              icon={<MessageCircle className="w-8 h-8 text-brand-accent" />}
+              title="Community"
+              description="Share your stories and ask questions without language barriers."
+            />
+            <FeatureCard
+              icon={<ShieldCheck className="w-8 h-8 text-indigo-500" />}
+              title="Visa Help"
+              description="Keep track of your visa status and get reminders before it expires."
+            />
+            <FeatureCard
+              icon={<Globe className="w-8 h-8 text-emerald-500" />}
+              title="Connections"
+              description="Meet international friends and locals in a safe environment."
+            />
+          </div>
+        </div>
+      </section>
+
+      <footer className="py-8 bg-gray-50 border-t border-gray-100 text-center text-gray-500 text-sm">
+        <p>© 2026 WalaWala. All rights reserved.</p>
+      </footer>
     </div>
+  )
+}
+
+function FeatureCard({ icon, title, description }: { icon: any, title: string, description: string }) {
+  return (
+    <motion.div
+      whileHover={{ y: -5 }}
+      className="p-6 rounded-2xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:shadow-xl transition-all duration-300"
+    >
+      <div className="mb-4 bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-sm">
+        {icon}
+      </div>
+      <h3 className="text-xl font-bold mb-2 text-gray-900">{title}</h3>
+      <p className="text-gray-600">{description}</p>
+    </motion.div>
   )
 }

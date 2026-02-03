@@ -1,0 +1,58 @@
+{
+    "community": {
+        "title": "커뮤니티",
+        "write": "글쓰기",
+        "backToCommunity": "← 커뮤니티로 돌아가기",
+        "comments": "댓글",
+        "noPostsYet": "아직 게시글이 없습니다. 첫 번째로 공유해보세요!",
+        "postedBy": "작성자",
+        "writeComment": "댓글을 작성하세요...",
+        "submit": "작성",
+        "submitting": "작성 중...",
+        "delete": "삭제"
+    },
+    "categories": {
+        "all": "전체",
+        "visa": "비자",
+        "jobs": "취업",
+        "life": "생활",
+        "qa": "Q&A"
+    },
+    "auth": {
+        "login": "로그인",
+        "signup": "회원가입",
+        "logout": "로그아웃",
+        "loginRequired": "이 작업을 수행하려면 로그인이 필요합니다.",
+        "continueWithGoogle": "Google로 계속하기"
+    },
+    "landing": {
+        "hero": {
+            "title": "한국에서의 커뮤니티 허브",
+            "subtitle": "외국인 친구들과 연결하고, 비자 도움을 받고, 일자리를 찾고, 한국 생활을 함께하세요.",
+            "cta": "커뮤니티 참여하기"
+        },
+        "features": {
+            "community": {
+                "title": "커뮤니티",
+                "description": "한국에 사는 수천 명의 외국인과 연결하세요"
+            },
+            "visa": {
+                "title": "비자 도움",
+                "description": "비자 상태 추적, 갱신 알림 받기"
+            },
+            "jobs": {
+                "title": "취업",
+                "description": "외국인을 위한 일자리와 아르바이트 찾기"
+            }
+        }
+    },
+    "common": {
+        "loading": "로딩 중...",
+        "error": "문제가 발생했습니다",
+        "save": "저장",
+        "cancel": "취소",
+        "confirm": "확인",
+        "anonymous": "익명",
+        "global": "전세계"
+    }
+}
