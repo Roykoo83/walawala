@@ -74,7 +74,12 @@ export async function signup(formData: FormData) {
     return { error: 'Invalid email or password' }
   }
 
-  const { data: authData, error } = await supabase.auth.signUp(data)
+  const { data: authData, error } = await supabase.auth.signUp({
+    ...data,
+    options: {
+      emailRedirectTo: getURL('auth/callback'),
+    },
+  })
 
   if (error) {
     return { error: error.message }

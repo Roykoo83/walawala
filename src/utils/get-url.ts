@@ -1,5 +1,5 @@
 export const getURL = (path: string = '') => {
-    let url = 'http://localhost:3000' // 기본값 (로컬 개발용)
+    let url = ''
 
     // 1. Production Domain (사용자 설정 값)
     if (process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.trim() !== '') {
@@ -12,6 +12,10 @@ export const getURL = (path: string = '') => {
     // 3. Vercel Public Env (Client-side)
     else if (process.env.NEXT_PUBLIC_VERCEL_URL && process.env.NEXT_PUBLIC_VERCEL_URL.trim() !== '') {
         url = process.env.NEXT_PUBLIC_VERCEL_URL
+    }
+    // 4. 로컬호스트 Fallback (개발 환경이거나 위 값이 모두 없을 때)
+    else {
+        url = 'http://localhost:3000'
     }
 
     // URL 정리 (프로토콜 포함 및 끝 슬래시 제거)
