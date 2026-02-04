@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { ensureProfile } from './profile'
 
 export async function getPosts() {
     const supabase = await createClient()
@@ -28,8 +29,11 @@ export async function getPosts() {
     return posts
 }
 
-export async function getPostsWithCounts(userId?: string) {
+export async function getPostsWithCounts(userId?: string, page: number = 0, limit: number = 10) {
     const supabase = await createClient()
+
+    const from = page * limit
+    const to = from + limit - 1
 
     const { data: posts, error } = await supabase
         .from('posts')
@@ -43,6 +47,7 @@ export async function getPostsWithCounts(userId?: string) {
       )
     `)
         .order('created_at', { ascending: false })
+        .range(from, to)
 
     if (error) {
         console.error('Error fetching posts:', error)
@@ -96,6 +101,9 @@ export async function createPost(formData: FormData) {
         return { error: 'All fields are required' }
     }
 
+    // [Bug Fix] 프로필이 없는 경우 자동 생성 (트리거 누락 대비)
+    await ensureProfile(user.id, user.email)
+
     const { error } = await supabase.from('posts').insert({
         author_id: user.id,
         title,
@@ -134,6 +142,7 @@ export async function toggleLike(postId: string) {
         await supabase.from('likes').delete().eq('id', existingLike.id)
     } else {
         // Like
+        await ensureProfile(user.id, user.email)
         await supabase.from('likes').insert({
             post_id: postId,
             user_id: user.id
@@ -228,6 +237,7 @@ export async function toggleBookmark(postId: string) {
         return { bookmarked: false }
     } else {
         // 북마크 추가
+        await ensureProfile(user.id, user.email)
         await supabase.from('bookmarks').insert({
             post_id: postId,
             user_id: user.id,
@@ -269,9 +279,12 @@ export async function getUserBookmarks() {
     return bookmarks?.map(b => b.posts) || []
 }
 
-// 카테고리별 게시글 조회
-export async function getPostsByCategory(category?: string, userId?: string) {
+// 카테고리별 게시글 조회 (페이지네이션 지원)
+export async function getPostsByCategory(category?: string, userId?: string, page: number = 0, limit: number = 10) {
     const supabase = await createClient()
+
+    const from = page * limit
+    const to = from + limit - 1
 
     let query = supabase
         .from('posts')
@@ -285,6 +298,7 @@ export async function getPostsByCategory(category?: string, userId?: string) {
             )
         `)
         .order('created_at', { ascending: false })
+        .range(from, to)
 
     if (category && category !== 'all') {
         query = query.eq('category', category)

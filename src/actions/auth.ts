@@ -13,13 +13,16 @@ const authSchema = z.object({
   password: z.string().min(6),
 })
 
+import { getURL } from '@/utils/get-url'
+
 export async function signInWithOAuth(provider: Provider) {
   const supabase = await createClient()
-  const origin = (await headers()).get('origin')
+  const redirectUrl = getURL('auth/callback')
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: redirectUrl,
     },
   })
 
@@ -71,10 +74,31 @@ export async function signup(formData: FormData) {
     return { error: 'Invalid email or password' }
   }
 
-  const { error } = await supabase.auth.signUp(data)
+  const { data: authData, error } = await supabase.auth.signUp({
+    ...data,
+    options: {
+      emailRedirectTo: getURL('auth/callback'),
+    },
+  })
 
   if (error) {
     return { error: error.message }
+  }
+
+  // [Bug Fix] 트리거 누락 대비: 프로필 수동 생성
+  if (authData.user) {
+    // 이미 존재하는지 확인 (중복 방지)
+    const { data: existingProfile } = await supabase.from('profiles').select('id').eq('id', authData.user.id).single()
+
+    if (!existingProfile) {
+      await supabase.from('profiles').insert({
+        id: authData.user.id,
+        email: authData.user.email,
+        nickname: authData.user.email?.split('@')[0] || 'New User',
+        nationality: 'Global',
+        visa_type: 'Unknown'
+      })
+    }
   }
 
   revalidatePath('/', 'layout')

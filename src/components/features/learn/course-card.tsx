@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
 import { PlayCircle, FileText, Download } from 'lucide-react'
 import type { Course } from '@/actions/learn'
@@ -30,12 +31,14 @@ export function CourseCard({ course }: CourseCardProps) {
         <Link href={`/learn/${course.id}`}>
             <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition-all duration-300 group h-full">
                 {/* Thumbnail */}
-                <div className="relative h-32 overflow-hidden">
+                <div className="relative h-32 overflow-hidden bg-slate-50">
                     {course.thumbnail_url ? (
-                        <img
+                        <Image
                             src={course.thumbnail_url}
                             alt={course.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            sizes="(max-width: 768px) 50vw, 300px"
                         />
                     ) : (
                         <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">

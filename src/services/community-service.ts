@@ -5,9 +5,10 @@ import { createClient } from '@/utils/supabase/server'
 interface FetchCommunityDataParams {
   q?: string
   category?: string
+  page?: number
 }
 
-export async function fetchCommunityData({ q, category = 'all' }: FetchCommunityDataParams) {
+export async function fetchCommunityData({ q, category = 'all', page = 0 }: FetchCommunityDataParams) {
   const supabase = await createClient()
   
   // Optimization: Fetch User first, then fetch Profile and Posts in parallel
@@ -23,8 +24,8 @@ export async function fetchCommunityData({ q, category = 'all' }: FetchCommunity
     : Promise.resolve(null)
 
   const postsPromise = q
-    ? searchPosts(q, user?.id)
-    : getPostsByCategory(category, user?.id)
+    ? searchPosts(q, user?.id) // Search usually returns all matches or has its own logic
+    : getPostsByCategory(category, user?.id, page)
 
   const [userProfile, posts] = await Promise.all([profilePromise, postsPromise])
 

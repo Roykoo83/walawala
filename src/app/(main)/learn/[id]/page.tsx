@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft, PlayCircle, FileText, Download, ExternalLink, Clock, BarChart3, MessageCircle } from 'lucide-react'
 
 const CONTENT_TYPE_CONFIG = {
@@ -87,12 +88,14 @@ export default async function CourseDetailPage({
                             />
                         </div>
                     ) : (
-                        <div className="aspect-video flex items-center justify-center">
+                        <div className="aspect-video flex items-center justify-center relative bg-gray-50">
                             {course.thumbnail_url ? (
-                                <img
+                                <Image
                                     src={course.thumbnail_url}
                                     alt={course.title}
-                                    className="w-full h-full object-cover"
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 768px) 100vw, 800px"
                                 />
                             ) : (
                                 <ContentIcon className={`w-16 h-16 ${contentConfig.color} opacity-50`} />

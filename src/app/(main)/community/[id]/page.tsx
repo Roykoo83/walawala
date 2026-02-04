@@ -84,8 +84,14 @@ export default async function PostDetailPage({
           {post.images && post.images.length > 0 && (
             <div className="grid gap-4 mt-6">
               {post.images.map((url: string, index: number) => (
-                <div key={index} className="relative w-full h-auto rounded-lg overflow-hidden border">
-                  <img src={url} alt={`Post image ${index + 1}`} className="w-full h-auto object-contain" />
+                <div key={index} className="relative w-full aspect-video rounded-xl overflow-hidden border border-gray-100 bg-gray-50">
+                  <Image 
+                    src={url} 
+                    alt={`Post image ${index + 1}`} 
+                    fill 
+                    className="object-contain" 
+                    sizes="(max-width: 768px) 100vw, 800px"
+                  />
                 </div>
               ))}
             </div>

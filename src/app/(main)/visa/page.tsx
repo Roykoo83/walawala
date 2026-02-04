@@ -117,6 +117,17 @@ export default async function VisaPage() {
       {/* Tools */}
       <h2 className="text-lg font-semibold mb-4 mt-8">Tools</h2>
       <div className="grid grid-cols-1 gap-3">
+        <Link href="/visa/ai-chat">
+          <Card className="hover:bg-gray-50 cursor-pointer transition-colors border-l-4 border-l-purple-500 bg-purple-50/10">
+            <CardContent className="p-4 flex justify-between items-center">
+              <div>
+                <span className="font-bold block text-gray-800">🤖 AI 비자 선배</span>
+                <span className="text-xs text-gray-500">무엇이든 물어보세요!</span>
+              </div>
+              <span className="text-gray-400">→</span>
+            </CardContent>
+          </Card>
+        </Link>
         <Link href="/visa/f2-calculator">
           <Card className="hover:bg-gray-50 cursor-pointer transition-colors">
             <CardContent className="p-4 flex justify-between items-center">

@@ -14,12 +14,16 @@ export default function LoginPage() {
     return await login(formData)
   }, null)
 
-    return (
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">로그인</CardTitle>
-          <CardDescription>
-            이메일로 간편하게 시작하세요.
+  return (
+    <div className="flex h-screen w-full items-center justify-center px-4">
+      <Card className="w-full max-w-sm border-none shadow-2xl shadow-pink-100/50 rounded-[2.5rem] overflow-hidden">
+        <CardHeader className="pt-10 pb-6 flex flex-col items-center">
+          <div className="w-20 h-20 rounded-3xl overflow-hidden shadow-lg border-4 border-white mb-4 transform -rotate-3">
+            <img src="/logo.jpg" alt="WalaWala Logo" className="object-cover w-full h-full" />
+          </div>
+          <CardTitle className="text-3xl font-[1000] text-slate-900 tracking-tighter italic">WalaWala</CardTitle>
+          <CardDescription className="text-center font-bold text-slate-400 mt-2">
+            외국인을 위한 가장 따뜻한 광장
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
@@ -60,5 +64,6 @@ export default function LoginPage() {
           </div>
         </CardFooter>
       </Card>
-    )
-  }
+    </div>
+  )
+}

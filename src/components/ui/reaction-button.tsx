@@ -8,21 +8,23 @@ import { cn } from "@/lib/utils"
 interface ReactionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   count: number
   isActive?: boolean
-  type?: 'like' | 'comment'
-  onToggle?: (newState: boolean) => void
+  kind?: 'like' | 'comment'
+  onToggleReaction?: (newState: boolean) => void
 }
 
 export function ReactionButton({ 
   count: initialCount, 
   isActive: initialActive = false, 
-  type = 'like',
+  kind = 'like',
   className,
-  onToggle,
+  onToggleReaction,
   ...props 
 }: ReactionButtonProps) {
   const [isActive, setIsActive] = React.useState(initialActive)
   const [count, setCount] = React.useState(initialCount)
   const [isHovered, setIsHovered] = React.useState(false)
+
+  const { onClick, ...restProps } = props
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault() // Prevent parent link clicks if any
@@ -31,20 +33,21 @@ export function ReactionButton({
     setIsActive(newState)
     setCount(prev => newState ? prev + 1 : prev - 1)
     
-    if (onToggle) {
-      onToggle(newState)
+    if (onToggleReaction) {
+      onToggleReaction(newState)
     }
     
-    if (props.onClick) {
-      props.onClick(e)
+    if (onClick) {
+      onClick(e)
     }
   }
 
-  const Icon = type === 'like' ? Heart : MessageCircle
-  const activeColor = type === 'like' ? 'text-red-500 fill-red-500' : 'text-blue-500 fill-blue-500'
+  const Icon = kind === 'like' ? Heart : MessageCircle
+  const activeColor = kind === 'like' ? 'text-red-500 fill-red-500' : 'text-blue-500 fill-blue-500'
 
   return (
     <motion.button
+      type="button"
       className={cn(
         "group flex items-center gap-1.5 text-sm font-medium transition-colors outline-none",
         isActive ? activeColor : "text-muted-foreground hover:text-foreground",
@@ -54,7 +57,7 @@ export function ReactionButton({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileTap={{ scale: 0.8 }}
-      {...props}
+      {...(restProps as any)}
     >
       <div className="relative">
         <motion.div
@@ -71,7 +74,7 @@ export function ReactionButton({
         
         {/* Particle effect on activation (Simplified) */}
         <AnimatePresence>
-          {isActive && type === 'like' && (
+          {isActive && kind === 'like' && (
             <motion.div
               initial={{ scale: 0, opacity: 1 }}
               animate={{ scale: 2, opacity: 0 }}
