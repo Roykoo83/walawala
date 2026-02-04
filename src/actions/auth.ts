@@ -13,13 +13,16 @@ const authSchema = z.object({
   password: z.string().min(6),
 })
 
+import { getURL } from '@/utils/get-url'
+
 export async function signInWithOAuth(provider: Provider) {
   const supabase = await createClient()
-  const origin = (await headers()).get('origin')
+  const redirectUrl = getURL('auth/callback')
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: redirectUrl,
     },
   })
 
