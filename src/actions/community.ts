@@ -113,6 +113,42 @@ export async function createComment(formData: FormData) {
   return { success: true }
 }
 
+export async function getPosts(page: number = 0, limit: number = 10, category?: string) {
+  const supabase = await createClient()
+  
+  // 게시글 정보와 함께 작성자 프로필, 댓글 수, 좋아요 수를 한 번에 조회
+  let query = supabase
+    .from('posts')
+    .select(`
+      *,
+      profiles(nickname, avatar_url, nationality, visa_type),
+      comments:comments(count),
+      likes:likes(count)
+    `, { count: 'exact' })
+    .order('created_at', { ascending: false })
+    .range(page * limit, (page + 1) * limit - 1)
+
+  if (category && category !== 'All') {
+    query = query.eq('category', category)
+  }
+
+  const { data, count, error } = await query
+
+  if (error) {
+    console.error('Error fetching posts:', error)
+    return { data: [], count: 0 }
+  }
+
+  // 데이터 가공 (count 객체 구조를 단순 숫자로 변환)
+  const formattedData = data?.map(post => ({
+    ...post,
+    comment_count: post.comments?.[0]?.count || 0,
+    like_count: post.likes?.[0]?.count || 0
+  }))
+
+  return { data: formattedData, count }
+}
+
 export async function deletePost(postId: string) {
   const supabase = await createClient()
 

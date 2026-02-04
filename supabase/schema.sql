@@ -10,6 +10,10 @@ create table public.profiles (
   avatar_url text,
   nationality text,
   visa_type text,
+  visa_expiry_date date,
+  target_visa text,
+  job_field text,
+  korean_level text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   primary key (id)
 );
@@ -83,6 +87,29 @@ create policy "Users can update own comments."
 create policy "Users can delete own comments."
   on comments for delete
   using ( auth.uid() = author_id );
+
+-- Create likes table
+create table public.likes (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  post_id uuid references public.posts(id) on delete cascade not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(user_id, post_id)
+);
+
+alter table public.likes enable row level security;
+
+create policy "Likes are viewable by everyone."
+  on likes for select
+  using ( true );
+
+create policy "Authenticated users can insert likes."
+  on likes for insert
+  with check ( auth.role() = 'authenticated' );
+
+create policy "Users can delete own likes."
+  on likes for delete
+  using ( auth.uid() = user_id );
 
 -- Storage Bucket Policy (You need to create 'images' bucket in Dashboard first)
 -- This SQL just sets policies if the bucket exists.

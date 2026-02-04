@@ -13,22 +13,22 @@ export default function SignupPage() {
     return await signup(formData)
   }, null)
 
-  return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
-        <CardDescription>
-          Enter your information to create an account.
-        </CardDescription>
-      </CardHeader>
+    return (
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">회원가입</CardTitle>
+          <CardDescription>
+            WalaWala와 함께 한국 생활을 시작해봐요.
+          </CardDescription>
+        </CardHeader>
         <form action={action}>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">이메일</Label>
               <Input id="email" name="email" type="email" placeholder="m@example.com" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">비밀번호</Label>
               <Input id="password" name="password" type="password" required />
             </div>
             {state?.error && (
@@ -37,16 +37,16 @@ export default function SignupPage() {
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button className="w-full" disabled={isPending}>
-              {isPending ? 'Creating account...' : 'Sign Up'}
+              {isPending ? '가입 중...' : '가입하기'}
             </Button>
             <div className="text-center text-sm">
-              Already have an account?{' '}
+              이미 계정이 있으신가요?{' '}
               <Link href="/login" className="underline">
-                Login
+                로그인
               </Link>
             </div>
           </CardFooter>
         </form>
       </Card>
-  )
-}
+    )
+  }

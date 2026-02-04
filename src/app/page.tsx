@@ -4,6 +4,10 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, Globe, MessageCircle, ShieldCheck } from 'lucide-react'
+import { LiveStatus } from '@/components/features/community/live-status'
+import { ResidentBadge } from '@/components/ui/resident-badge'
+import { ReactionButton } from '@/components/ui/reaction-button'
+import { Card, CardContent } from '@/components/ui/card'
 
 export default function Home() {
   return (
@@ -24,6 +28,11 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {/* Live Indicator Overlay */}
+      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-40">
+        <LiveStatus count={102} />
+      </div>
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 text-center bg-gradient-to-b from-gray-50 to-white">
@@ -84,10 +93,75 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Live Feed Preview Section */}
+      <section className="py-20 bg-gray-50/50 overflow-hidden">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">Live from the Plaza</h2>
+            <Link href="/community" className="text-sm font-medium text-brand-primary hover:underline">View all posts</Link>
+          </div>
+          
+          <div className="space-y-6">
+            <FeedCard 
+              name="Minh" 
+              country="VN" 
+              visa="E-7" 
+              content="드디어 E-7 비자 승인받았습니다! 서류 준비가 정말 힘들었지만 WalaWala 덕분에 무사히 통과했네요. 궁금한 점 있으면 물어보세요! 😊"
+              likes={234}
+              comments={45}
+            />
+            <FeedCard 
+              name="Sarah" 
+              country="US" 
+              visa="D-2" 
+              content="오늘 신촌에서 만날 분 계신가요? 한국어 연습도 하고 맛있는 것도 먹고 싶어요! 🍜"
+              likes={12}
+              comments={8}
+            />
+          </div>
+        </div>
+      </section>
+
       <footer className="py-8 bg-gray-50 border-t border-gray-100 text-center text-gray-500 text-sm">
         <p>© 2026 WalaWala. All rights reserved.</p>
       </footer>
     </div>
+  )
+}
+
+function FeedCard({ name, country, visa, content, likes, comments }: any) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+    >
+      <Card className="border-none shadow-md overflow-hidden bg-white">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-brand-accent/20 flex items-center justify-center font-bold text-brand-primary">
+                {name[0]}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-gray-900">{name}</span>
+                  <ResidentBadge countryCode={country} visaType={visa as any} />
+                </div>
+                <span className="text-xs text-gray-500">2 minutes ago</span>
+              </div>
+            </div>
+          </div>
+          <p className="text-gray-700 mb-6 leading-relaxed">
+            {content}
+          </p>
+          <div className="flex items-center gap-6">
+            <ReactionButton type="like" count={likes} />
+            <ReactionButton type="comment" count={comments} />
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }
 

@@ -24,7 +24,7 @@ export default function OnboardingPage() {
   const [state, action, isPending] = useActionState(async (_prev: any, formData: FormData) => {
     return await completeOnboarding(formData)
   }, null)
-  
+
   const [step, setStep] = useState(1)
 
   return (
@@ -57,7 +57,8 @@ export default function OnboardingPage() {
                     <SelectItem value="Vietnam">Vietnam 🇻🇳</SelectItem>
                     <SelectItem value="China">China 🇨🇳</SelectItem>
                     <SelectItem value="Uzbekistan">Uzbekistan 🇺🇿</SelectItem>
-                    <SelectItem value="Nepal">Nepal 🇳🇵</SelectItem>
+                    <SelectItem value="Russia">Russia 🇷🇺</SelectItem>
+                    <SelectItem value="Spain">Spain 🇪🇸</SelectItem>
                     <SelectItem value="Indonesia">Indonesia 🇮🇩</SelectItem>
                     <SelectItem value="Mongolia">Mongolia 🇲🇳</SelectItem>
                     <SelectItem value="USA">USA 🇺🇸</SelectItem>
@@ -87,10 +88,10 @@ export default function OnboardingPage() {
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="visaExpiryDate">Visa Expiry Date</Label>
-                  <Input 
-                    id="visaExpiryDate" 
-                    name="visaExpiryDate" 
-                    type="date" 
+                  <Input
+                    id="visaExpiryDate"
+                    name="visaExpiryDate"
+                    type="date"
                     required={step === 2}
                   />
                 </div>
@@ -103,11 +104,11 @@ export default function OnboardingPage() {
           </CardContent>
           <CardFooter className="flex justify-between">
             {step === 1 ? (
-               <Button type="button" variant="ghost" disabled>Back</Button>
+              <Button type="button" variant="ghost" disabled>Back</Button>
             ) : (
-               <Button type="button" variant="outline" onClick={() => setStep(1)}>Back</Button>
+              <Button type="button" variant="outline" onClick={() => setStep(1)}>Back</Button>
             )}
-            
+
             {step === 1 ? (
               <Button type="button" onClick={() => setStep(2)}>Next</Button>
             ) : (

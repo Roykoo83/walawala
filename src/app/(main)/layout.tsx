@@ -1,14 +1,14 @@
 import { BottomNav } from '@/components/layout/bottom-nav'
 
 export default function MainLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode
+  children: React.ReactNode
 }) {
-    return (
-        <>
-            {children}
-            <BottomNav />
-        </>
-    )
+  return (
+    <>
+      <main className="pb-20">{children}</main>
+      <BottomNav />
+    </>
+  )
 }

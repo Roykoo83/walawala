@@ -1,124 +1,145 @@
-import { getPostsWithCounts } from '@/actions/post'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { getHomeData } from '@/actions/home'
 import Link from 'next/link'
-import { PenSquare, MessageSquare } from 'lucide-react'
-import { createClient } from '@/utils/supabase/server'
-import { VisaCard } from '@/components/features/visa/visa-card'
-import { LikeButton } from '@/components/features/community/like-button'
+import { PenSquare, MessageSquare, Search, Bell, Heart } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { LiveStatus } from '@/components/features/community/live-status'
+import { ResidentBadge, AnimatedReaction } from '@/components/features/community/resident-elements'
+import { Button } from '@/components/ui/button'
 
 export default async function CommunityPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  const posts = await getPostsWithCounts(user?.id)
-  
-  let userProfile = null
-  if (user) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('visa_type, visa_expiry_date, nickname')
-      .eq('id', user.id)
-      .single()
-    userProfile = data
-  }
+  const { user, profile, visaStatus, posts } = await getHomeData()
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-md pb-20">
-      {/* Visa Card Section */}
-      {user && (
-        <div className="mb-6">
-          <VisaCard 
-            visaType={userProfile?.visa_type} 
-            expiryDate={userProfile?.visa_expiry_date}
-            nickname={userProfile?.nickname || user.email?.split('@')[0]}
-          />
-        </div>
-      )}
-
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Community</h1>
-        <Button asChild size="sm" className="bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-full shadow-md">
-          <Link href="/community/create">
-            <PenSquare className="w-4 h-4 mr-2" />
-            Write
-          </Link>
-        </Button>
-      </div>
-
-      {/* Categories (MVP Dummy) */}
-      <div className="flex gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar">
-        {['ALL', 'VISA', 'JOBS', 'LIFE', 'Q&A'].map((cat) => (
-          <Button key={cat} variant="outline" size="sm" className="rounded-full border-gray-200 text-gray-700 hover:bg-gray-100">
-            {cat}
-          </Button>
-        ))}
-      </div>
-
-      <div className="space-y-4">
-        {posts.length === 0 ? (
-          <div className="text-center py-10 text-muted-foreground">
-            <p>No posts yet. Be the first to share!</p>
+    <div className="min-h-screen bg-slate-50 pb-24 relative">
+      
+      {/* Sticky Top Bar with Live Status */}
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 py-2">
+        <div className="flex justify-between items-center max-w-md mx-auto">
+          <h1 className="text-xl font-black text-slate-900 tracking-tighter italic">WalaWala</h1>
+          <LiveStatus count={100 + Math.floor(Math.random() * 20)} />
+          <div className="flex gap-2">
+            <Search className="w-5 h-5 text-slate-400" />
+            <div className="relative">
+              <Bell className="w-5 h-5 text-slate-400" />
+              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" />
+            </div>
           </div>
-        ) : (
-          posts.map((post: any) => (
-            <Link key={post.id} href={`/community/${post.id}`} className="block">
-              <Card className="border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer active:scale-[0.99] transition-transform">
-                <CardHeader className="flex flex-row items-center gap-3 p-4 pb-2">
-                  <Avatar className="w-10 h-10 border bg-gray-50">
-                    <AvatarImage src={post.profiles?.avatar_url} />
-                    <AvatarFallback>{post.profiles?.nickname?.[0] || 'U'}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm text-gray-900">{post.profiles?.nickname || 'Anonymous'}</span>
-                      <span className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200">
-                        {post.profiles?.nationality || 'Global'}
+        </div>
+      </header>
+
+      <main className="container max-w-md mx-auto px-4 pt-6">
+        
+        {/* User Context Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-start mb-2">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 leading-tight">
+                Hello, {profile?.nickname || 'Friend'}! 🌍
+              </h2>
+              <p className="text-slate-500 text-sm">Welcome back to the square.</p>
+            </div>
+            {visaStatus && (
+              <Link href="/visa">
+                <div className={`px-3 py-1.5 rounded-2xl border ${visaStatus.isUrgent ? 'bg-red-50 border-red-100' : 'bg-indigo-50 border-indigo-100'} flex flex-col items-end`}>
+                  <span className={`text-[10px] font-bold ${visaStatus.isUrgent ? 'text-red-500' : 'text-indigo-500'}`}>{visaStatus.type}</span>
+                  <span className={`text-sm font-black ${visaStatus.isUrgent ? 'text-red-600' : 'text-indigo-600'}`}>{visaStatus.text}</span>
+                </div>
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {/* Square Categories */}
+        <div className="flex gap-4 mb-10 overflow-x-auto no-scrollbar py-2">
+           {[
+             { label: 'Visa', icon: '📋', bg: 'bg-blue-500' },
+             { label: 'Jobs', icon: '💼', bg: 'bg-indigo-500' },
+             { label: 'Room', icon: '🏠', bg: 'bg-emerald-500' },
+             { label: 'Food', icon: '🍜', bg: 'bg-orange-500' },
+             { label: 'Talk', icon: '💬', bg: 'bg-pink-500' },
+           ].map((cat) => (
+             <div key={cat.label} className="flex flex-col items-center gap-2 min-w-[64px]">
+               <div className={`${cat.bg} w-14 h-14 rounded-3xl flex items-center justify-center text-2xl shadow-lg shadow-${cat.bg.split('-')[1]}-200/50 text-white transform active:scale-90 transition-transform`}>
+                 {cat.icon}
+               </div>
+               <span className="text-[11px] font-bold text-slate-500">{cat.label}</span>
+             </div>
+           ))}
+        </div>
+
+        {/* The Square Feed */}
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-bold text-slate-900">The Square 🔥</h3>
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Newest First</span>
+        </div>
+
+        <div className="space-y-6">
+          {posts.map((post: any) => (
+            <Card key={post.id} className="border-none shadow-xl shadow-slate-200/50 rounded-[2rem] overflow-hidden bg-white">
+              <CardHeader className="p-5 pb-0">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-12 h-12 border-2 border-slate-50">
+                      <AvatarImage src={post.profiles?.avatar_url} />
+                      <AvatarFallback className="bg-slate-100 text-slate-400 font-bold">
+                        {post.profiles?.nickname?.[0] || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="font-bold text-sm text-slate-900">
+                        {post.profiles?.nickname || 'Anonymous'}
                       </span>
+                      <ResidentBadge 
+                        nationality={post.profiles?.nationality} 
+                        visaType={post.profiles?.visa_type} 
+                      />
                     </div>
-                    <span className="text-xs text-gray-400">{new Date(post.created_at).toLocaleDateString()}</span>
                   </div>
-                </CardHeader>
-                <CardContent className="p-4 pt-2">
-                  <div className="mb-2">
-                    <span className="text-xs font-medium text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full mr-2">
-                      {post.category}
-                    </span>
-                    <h3 className="font-bold inline align-middle text-gray-900">{post.title}</h3>
-                  </div>
+                  <span className="text-[10px] font-bold text-slate-300">
+                    {new Date(post.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
+              </CardHeader>
+              
+              <Link href={`/community/${post.id}`}>
+                <CardContent className="p-5">
+                  <h4 className="text-lg font-extrabold text-slate-900 mb-2 leading-tight">
+                    {post.title}
+                  </h4>
                   
                   {post.images && post.images.length > 0 && (
-                    <div className="relative w-full h-48 mb-3 overflow-hidden rounded-xl bg-gray-100 border border-gray-100">
-                      <img 
-                        src={post.images[0]} 
-                        alt="Post thumbnail" 
-                        className="object-cover w-full h-full" 
-                      />
+                    <div className="relative w-full h-56 mb-4 rounded-3xl overflow-hidden">
+                      <img src={post.images[0]} alt="" className="object-cover w-full h-full" />
                     </div>
                   )}
 
-                  <p className="text-sm text-gray-600 line-clamp-3 mb-3">
+                  <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed mb-4">
                     {post.content}
                   </p>
-                  
-                  {/* Interaction Buttons */}
-                  <div className="flex gap-4 border-t border-gray-50 pt-3 mt-1">
-                    <LikeButton 
-                      postId={post.id} 
-                      initialLikesCount={post.likes_count} 
-                      initialIsLiked={post.is_liked} 
-                    />
-                    <div className="flex items-center gap-1 text-gray-400 px-2 h-8 text-xs font-medium">
-                      <MessageSquare className="w-4 h-4" />
-                      <span>{post.comments_count}</span>
-                    </div>
+
+                  <div className="flex items-center gap-4">
+                    <AnimatedReaction count={post.likes_count} active={post.is_liked}>
+                      <Heart className={post.is_liked ? "fill-current" : ""} size={18} />
+                    </AnimatedReaction>
+                    <AnimatedReaction count={post.comments_count}>
+                      <MessageSquare size={18} />
+                    </AnimatedReaction>
                   </div>
                 </CardContent>
-              </Card>
-            </Link>
-          ))
-        )}
-      </div>
+              </Link>
+            </Card>
+          ))}
+        </div>
+      </main>
+
+      {/* Floating Action Button */}
+      <Link href="/community/create">
+        <Button className="fixed bottom-8 right-6 w-16 h-16 rounded-full bg-pink-600 hover:bg-pink-700 shadow-2xl shadow-pink-200 text-white p-0 flex items-center justify-center transition-transform hover:scale-110 active:scale-95 z-50">
+          <PenSquare size={28} />
+        </Button>
+      </Link>
+
     </div>
   )
 }

@@ -2,44 +2,58 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, FileText, User } from 'lucide-react'
+import { Home, Compass, PlusCircle, CreditCard, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const NAV_ITEMS = [
-    { href: '/community', label: 'Home', icon: Home },
-    { href: '/visa', label: 'Visa', icon: FileText },
-    { href: '/profile', label: 'Profile', icon: User },
-]
-
 export function BottomNav() {
-    const pathname = usePathname()
+  const pathname = usePathname()
 
-    return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t safe-area-pb">
-            <div className="max-w-md mx-auto flex justify-around items-center h-16">
-                {NAV_ITEMS.map((item) => {
-                    const isActive = pathname.startsWith(item.href)
-                    const Icon = item.icon
+  const navItems = [
+    { label: 'Home', href: '/community', icon: Home },
+    { label: 'Explore', href: '/explore', icon: Compass },
+    { label: 'Post', href: '/community/create', icon: PlusCircle, isMain: true },
+    { label: 'Visa', href: '/visa', icon: CreditCard },
+    { label: 'Profile', href: '/profile', icon: User },
+  ]
 
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                "flex flex-col items-center justify-center px-4 py-2 min-w-[64px] transition-colors",
-                                isActive
-                                    ? "text-brand-primary"
-                                    : "text-gray-400 hover:text-gray-600"
-                            )}
-                        >
-                            <Icon className={cn("w-5 h-5 mb-1", isActive && "stroke-[2.5]")} />
-                            <span className={cn("text-xs", isActive && "font-semibold")}>
-                                {item.label}
-                            </span>
-                        </Link>
-                    )
-                })}
-            </div>
-        </nav>
-    )
+  // Hide on auth pages
+  if (pathname.startsWith('/login') || pathname.startsWith('/signup') || pathname.startsWith('/onboarding')) {
+    return null
+  }
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 pb-safe">
+      <div className="flex justify-around items-center h-16 max-w-md mx-auto px-2">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
+          const Icon = item.icon
+
+          if (item.isMain) {
+            return (
+              <Link key={item.href} href={item.href}>
+                <div className="flex flex-col items-center justify-center -mt-6">
+                  <div className="bg-brand-accent hover:bg-brand-accent-dark text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform active:scale-95">
+                    <Icon className="w-7 h-7" />
+                  </div>
+                  <span className="text-[10px] mt-1 font-medium text-gray-500">{item.label}</span>
+                </div>
+              </Link>
+            )
+          }
+
+          return (
+            <Link key={item.href} href={item.href} className="flex-1">
+              <div className={cn(
+                "flex flex-col items-center justify-center h-full space-y-1",
+                isActive ? "text-brand-accent-dark" : "text-gray-400 hover:text-gray-600"
+              )}>
+                <Icon className={cn("w-6 h-6", isActive && "fill-current")} />
+                <span className="text-[10px] font-medium">{item.label}</span>
+              </div>
+            </Link>
+          )
+        })}
+      </div>
+    </div>
+  )
 }

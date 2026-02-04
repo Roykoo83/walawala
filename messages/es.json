@@ -1,0 +1,58 @@
+{
+    "community": {
+        "title": "Comunidad",
+        "write": "Escribir",
+        "backToCommunity": "← Volver a la comunidad",
+        "comments": "Comentarios",
+        "noPostsYet": "Aún no hay publicaciones. ¡Sé el primero en compartir!",
+        "postedBy": "Publicado por",
+        "writeComment": "Escribe un comentario...",
+        "submit": "Enviar",
+        "submitting": "Enviando...",
+        "delete": "Eliminar"
+    },
+    "categories": {
+        "all": "TODO",
+        "visa": "VISA",
+        "jobs": "TRABAJO",
+        "life": "VIDA",
+        "qa": "PREGUNTAS"
+    },
+    "auth": {
+        "login": "Iniciar sesión",
+        "signup": "Registrarse",
+        "logout": "Cerrar sesión",
+        "loginRequired": "Debes iniciar sesión para realizar esta acción.",
+        "continueWithGoogle": "Continuar con Google"
+    },
+    "landing": {
+        "hero": {
+            "title": "Tu comunidad en Corea",
+            "subtitle": "Conéctate con otros extranjeros, obtén ayuda con tu visa, encuentra trabajo y navega la vida en Corea.",
+            "cta": "Únete a la comunidad"
+        },
+        "features": {
+            "community": {
+                "title": "Comunidad",
+                "description": "Conecta con miles de extranjeros viviendo en Corea"
+            },
+            "visa": {
+                "title": "Ayuda con visa",
+                "description": "Rastrea el estado de tu visa, recibe recordatorios de renovación"
+            },
+            "jobs": {
+                "title": "Trabajos",
+                "description": "Encuentra empleos y trabajos de medio tiempo para extranjeros"
+            }
+        }
+    },
+    "common": {
+        "loading": "Cargando...",
+        "error": "Algo salió mal",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "confirm": "Confirmar",
+        "anonymous": "Anónimo",
+        "global": "Global"
+    }
+}
