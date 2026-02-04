@@ -10,7 +10,7 @@ export default async function CommunityPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24 relative selection:bg-pink-100 selection:text-pink-900">
-      
+
       {/* Sticky Top Bar: The Hub of Activity */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-100 px-4 py-3 shadow-[0_1px_10px_rgba(0,0,0,0.02)]">
         <div className="flex justify-between items-center max-w-md mx-auto">
@@ -32,7 +32,7 @@ export default async function CommunityPage() {
       </header>
 
       <main className="container max-w-md mx-auto px-4 pt-8">
-        
+
         {/* Personalized Welcome & Visa Alert */}
         <div className="mb-10">
           <div className="flex justify-between items-start">
@@ -57,20 +57,21 @@ export default async function CommunityPage() {
 
         {/* Dynamic Category Chips */}
         <div className="flex gap-4 mb-12 overflow-x-auto no-scrollbar py-2 px-1">
-           {[
-             { label: 'Visa', icon: '📋', bg: 'from-blue-500 to-blue-600', shadow: 'shadow-blue-200' },
-             { label: 'Jobs', icon: '💼', bg: 'from-indigo-500 to-indigo-600', shadow: 'shadow-indigo-200' },
-             { label: 'Room', icon: '🏠', bg: 'from-emerald-500 to-emerald-600', shadow: 'shadow-emerald-200' },
-             { label: 'Food', icon: '🍜', bg: 'from-orange-500 to-orange-600', shadow: 'shadow-orange-200' },
-             { label: 'Talk', icon: '💬', bg: 'from-pink-500 to-pink-600', shadow: 'shadow-pink-200' },
-           ].map((cat) => (
-             <div key={cat.label} className="flex flex-col items-center gap-3 min-w-[72px]">
-               <div className={`bg-gradient-to-br ${cat.bg} w-16 h-16 rounded-[2rem] flex items-center justify-center text-3xl shadow-xl ${cat.shadow} text-white transform active:scale-90 transition-all hover:rotate-3 cursor-pointer`}>
-                 {cat.icon}
-               </div>
-               <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">{cat.label}</span>
-             </div>
-           ))}
+          {[
+            { label: 'Visa', icon: '📋', bg: 'from-blue-500 to-blue-600', shadow: 'shadow-blue-200', href: '/visa' },
+            { label: 'Jobs', icon: '💼', bg: 'from-indigo-500 to-indigo-600', shadow: 'shadow-indigo-200', href: '/explore' },
+            { label: 'Room', icon: '🏠', bg: 'from-emerald-500 to-emerald-600', shadow: 'shadow-emerald-200', href: '/explore' },
+            { label: 'Food', icon: '🍜', bg: 'from-orange-500 to-orange-600', shadow: 'shadow-orange-200', href: '/explore' },
+            { label: 'Study', icon: '🎓', bg: 'from-violet-500 to-violet-600', shadow: 'shadow-violet-200', href: '/learn' },
+            { label: 'Talk', icon: '💬', bg: 'from-pink-500 to-pink-600', shadow: 'shadow-pink-200', href: '/community' },
+          ].map((cat) => (
+            <Link key={cat.label} href={cat.href} className="flex flex-col items-center gap-3 min-w-[72px]">
+              <div className={`bg-gradient-to-br ${cat.bg} w-16 h-16 rounded-[2rem] flex items-center justify-center text-3xl shadow-xl ${cat.shadow} text-white transform active:scale-90 transition-all hover:rotate-3 cursor-pointer`}>
+                {cat.icon}
+              </div>
+              <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">{cat.label}</span>
+            </Link>
+          ))}
         </div>
 
         {/* The Living Square: Dynamic Feed */}
@@ -80,9 +81,9 @@ export default async function CommunityPage() {
             <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Live Activity</p>
           </div>
           <div className="flex gap-2">
-             <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse" />
-             <div className="w-2 h-2 bg-slate-200 rounded-full" />
-             <div className="w-2 h-2 bg-slate-200 rounded-full" />
+            <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse" />
+            <div className="w-2 h-2 bg-slate-200 rounded-full" />
+            <div className="w-2 h-2 bg-slate-200 rounded-full" />
           </div>
         </div>
 
