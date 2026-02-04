@@ -156,8 +156,8 @@ function FeedCard({ name, country, visa, content, likes, comments }: any) {
             {content}
           </p>
           <div className="flex items-center gap-6">
-            <ReactionButton type="like" count={likes} />
-            <ReactionButton type="comment" count={comments} />
+            <ReactionButton kind="like" count={likes} />
+            <ReactionButton kind="comment" count={comments} />
           </div>
         </CardContent>
       </Card>

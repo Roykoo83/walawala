@@ -11,6 +11,7 @@ export interface HomeData {
     dDay?: number;
   }>;
   relatedPosts: any[];
+  recommendedResidents: any[]; // 추가: 추천 이웃 (가상 주민)
   roadmap: Array<{
     step: number;
     title: string;
@@ -27,8 +28,8 @@ export async function getHomeData(): Promise<HomeData | { error: string }> {
     return { error: '로그인이 필요합니다.' }
   }
 
-  // 1. 프로필 및 관련 데이터 병렬 조회
-  const [profileResult, postsResult] = await Promise.all([
+  // 1. 프로필, 관련 게시글, 추천 이웃 데이터를 병렬 조회
+  const [profileResult, postsResult, residentsResult] = await Promise.all([
     supabase
       .from('profiles')
       .select('*')
@@ -36,9 +37,14 @@ export async function getHomeData(): Promise<HomeData | { error: string }> {
       .single(),
     supabase
       .from('posts')
-      .select('*')
+      .select('*, profiles(nickname, avatar_url)')
       .order('created_at', { ascending: false })
-      .limit(5)
+      .limit(10), // 피드를 위해 더 많은 게시글 페칭
+    supabase
+      .from('profiles')
+      .select('id, nickname, avatar_url, nationality, visa_type')
+      .neq('id', user.id) // 본인 제외
+      .limit(20) // 랜덤 추출을 위한 후보군
   ])
 
   if (profileResult.error) {
@@ -46,9 +52,20 @@ export async function getHomeData(): Promise<HomeData | { error: string }> {
   }
 
   const profile = profileResult.data
-  const posts = postsResult.data || []
+  const allPosts = postsResult.data || []
+  const allResidents = residentsResult.data || []
 
-  // 2. 비자 알림 로직 (Personalization)
+  // 2. 추천 이웃 무작위 추출 (Shuffle)
+  const recommendedResidents = allResidents
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 5)
+
+  // 3. 게시글 무작위 섞기 (홈 화면의 다양성을 위해)
+  const relatedPosts = allPosts
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 6)
+
+  // 4. 비자 알림 로직 (Personalization)
   const notifications: HomeData['notifications'] = []
   
   if (profile.visa_expiry_date) {
@@ -76,9 +93,8 @@ export async function getHomeData(): Promise<HomeData | { error: string }> {
     })
   }
 
-  // 3. 로드맵 추천 로직 (Simple Rule-based)
+  // 5. 로드맵 추천 로직
   let roadmap: HomeData['roadmap'] = []
-  
   const currentVisa = profile.visa_type || 'Unknown'
   const target = profile.target_visa || 'F-2'
 
@@ -96,25 +112,17 @@ export async function getHomeData(): Promise<HomeData | { error: string }> {
       { step: 3, title: target, status: 'upcoming', description: '장기 체류 자격 획득' },
     ]
   } else {
-    // Default Roadmap
     roadmap = [
       { step: 1, title: '비자 정보 등록', status: 'current', description: '현재 비자 상태를 입력하세요' },
       { step: 2, title: '목표 설정', status: 'upcoming', description: '최종 정착 목표를 설정하세요' },
     ]
   }
 
-  // 4. 관련 게시글 필터링 (In-memory filtering for better relevance if DB filter is weak)
-  // 실제로는 DB 쿼리 레벨에서 필터링하는 것이 좋음. 여기서는 예시로 작성.
-  const relevantPosts = posts.filter(post => {
-    if (!profile.nationality && !profile.visa_type) return true;
-    // 간단한 매칭 로직: 제목이나 내용에 국적/비자가 포함되면 우선순위 (실제 검색엔진 아님)
-    return true; 
-  })
-
   return {
     profile,
     notifications,
-    relatedPosts: relevantPosts,
+    relatedPosts,
+    recommendedResidents,
     roadmap
   }
 }
