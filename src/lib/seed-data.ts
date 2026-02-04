@@ -42,6 +42,49 @@ export const SEED_POSTS = [
 행정사 안 쓰고 혼자 해보려고 하는데 팁 좀 부탁드려요!`,
     images: []
   },
+  // --- 2026 Real-World Data Based Posts (Added) ---
+  {
+    author_id: 'user_sophia_uuid_placeholder', // Sophia
+    category: 'travel',
+    title: '🏝️ 2026년 한국 숨은 여행지 추천: 안동 & 순천 (서울 근교 말고!)',
+    content: `매번 서울, 부산만 가는 친구들에게 추천해요!
+이번 연휴에 다녀왔는데 '안동 하회마을'은 진짜 고즈넉하고 힐링됩니다. 편의점도 없는 진짜 시골 느낌? 📸
+그리고 '순천만' 갈대밭도 지금 딱 예뻐요. KTX 타고 3시간이면 가니까 주말에 도전해보세요.
+사람 너무 많은 핫플보다 이런 곳이 진짜 한국 느낌 나는 것 같아요.`,
+    images: []
+  },
+  {
+    author_id: 'user_min_uuid_placeholder', // Min
+    category: 'housing',
+    title: '🏠 2026년 월세 구할 때 필수 체크! (전세사기 조심)',
+    content: `요즘 서울 월세 구하기 진짜 힘드네요 ㅠㅠ
+부동산 아저씨가 말해줬는데, 2026년부터는 외국인도 집 살 때 거주 요건이 까다로워졌대요.
+우리는 월세 구하는 거지만, 집주인이 융자(Loan) 얼마나 있는지 꼭 등기부등본 확인하세요!
+계약하기 전에 '특약' 넣는 거 잊지 마시고요. 보증금 절대 지켜!! 💸`,
+    images: []
+  },
+  {
+    author_id: 'user_sophia_uuid_placeholder', // Sophia
+    category: 'visa',
+    title: '🚨 [속보] 2026년 E-7 비자 연봉 기준 3,112만원으로 인상 확정',
+    content: `다들 소식 들으셨나요? 
+2026년 2월 1일부터 E-7 비자 발급을 위한 GNI 80% 기준 연봉이 3,112만원으로 오른다고 합니다.
+기존 2,867만원에서 꽤 많이 올랐어요. 
+지금 연봉 협상 시즌인 분들 이거 꼭 캡쳐해서 회사랑 이야기하세요!
+1월 31일까지 접수하면 기존 기준 적용된다고 하니 서두르세요!`,
+    images: []
+  },
+  {
+    author_id: 'user_amar_uuid_placeholder', // Amar
+    category: 'daily',
+    title: '🗑️ 이사 왔는데 쓰레기 봉투 색깔이 달라요? (벌금 조심)',
+    content: `옆 동네(마포구)에서 서대문구로 이사 왔는데, 쓰레기 봉투 색깔이 다르네요?
+편의점 갔더니 구마다 봉투가 다르대요! 
+모르고 예전 동네 봉투 썼다가 수거 안 해가서 난감했습니다 😅
+재활용도 깨끗이 씻어서 투명 봉투에 넣어야 한대요. 벌금 물지 않게 조심하세요!`,
+    images: []
+  },
+  // ------------------------------------------------
   {
     author_id: 'user_min_uuid_placeholder', // Min
     category: 'jobs',

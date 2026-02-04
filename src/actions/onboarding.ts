@@ -1,42 +1,49 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { z } from 'zod'
+
+const onboardingSchema = z.object({
+  nationality: z.string().min(1),
+  visaType: z.string().min(1),
+  visaExpiryDate: z.string().date(),
+})
 
 export async function completeOnboarding(formData: FormData) {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
-    if (!user) {
-        return { error: 'Not authenticated' }
-    }
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
 
-    const nickname = formData.get('nickname') as string
-    const visaType = formData.get('visaType') as string
-    const expiryDate = formData.get('expiryDate') as string
-    const nationality = formData.get('nationality') as string
+  const data = {
+    nationality: formData.get('nationality') as string,
+    visaType: formData.get('visaType') as string,
+    visaExpiryDate: formData.get('visaExpiryDate') as string,
+  }
 
-    if (!nickname || !visaType || !expiryDate) {
-        return { error: 'Please fill in all required fields.' }
-    }
+  const validatedFields = onboardingSchema.safeParse(data)
 
-    // Insert or Update Profile
-    const { error } = await supabase
-        .from('profiles')
-        .upsert({
-            id: user.id,
-            nickname,
-            visa_type: visaType,
-            visa_expiry_date: expiryDate,
-            nationality: nationality || null,
-            updated_at: new Date().toISOString()
-        })
+  if (!validatedFields.success) {
+    return { error: 'Invalid data' }
+  }
 
-    if (error) {
-        console.error('Onboarding Error:', error)
-        return { error: 'Failed to save profile. Please try again.' }
-    }
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      nationality: data.nationality,
+      visa_type: data.visaType,
+      visa_expiry_date: data.visaExpiryDate,
+    })
+    .eq('id', user.id)
 
-    // Redirect to community after success
-    redirect('/community')
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/profile')
+  redirect('/community')
 }
