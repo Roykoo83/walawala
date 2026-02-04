@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import { askVisaSenior } from '@/actions/visa-ai'
 
 interface Message {
   id: string
@@ -21,7 +22,7 @@ export default function AiVisaChatPage() {
     {
       id: '1',
       role: 'assistant',
-      content: '안녕하세요! 저는 왈라왈라의 AI 비자 선배입니다. 🌏\n비자 변경이나 갱신에 대해 궁금한 점이 있으신가요? 차근차근 도와드릴게요.',
+      content: '안녕! 나는 왈라왈라의 AI 비자 선배야. 🌏\n한국 생활하면서 비자 때문에 고민 많았지? 내가 차근차근 도와줄게. 무엇이든 물어봐!',
       timestamp: new Date(),
     }
   ])
@@ -36,7 +37,7 @@ export default function AiVisaChatPage() {
     }
   }, [messages, isTyping])
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return
 
     const userMessage: Message = {
@@ -50,17 +51,22 @@ export default function AiVisaChatPage() {
     setInput('')
     setIsTyping(true)
 
-    // AI 응답 시뮬레이션
-    setTimeout(() => {
+    try {
+      const history = messages.map(m => ({ role: m.role, content: m.content }))
+      const response = await askVisaSenior(input, history)
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: '질문을 잘 이해했어요. 현재 비자 타입과 목표하시는 비자 타입을 알려주시면 더 정확한 점수 계산과 서류 준비를 도와드릴 수 있습니다!',
+        content: response.content || '미안해, 선배가 잠시 생각을 정리 중이야. 다시 말해줄래?',
         timestamp: new Date(),
       }
       setMessages(prev => [...prev, assistantMessage])
+    } catch (error) {
+      console.error('AI Error:', error)
+    } finally {
       setIsTyping(false)
-    }, 1500)
+    }
   }
 
   return (
@@ -74,18 +80,18 @@ export default function AiVisaChatPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-1.5">
+            <h1 className="text-lg font-[1000] text-slate-900 tracking-tight flex items-center gap-1.5 italic">
               AI 비자 선배
-              <Sparkles className="w-4 h-4 text-brand-accent" />
+              <Sparkles className="w-4 h-4 text-pink-500" />
             </h1>
             <div className="flex items-center gap-1">
               <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Online & Secured</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Senior Online</span>
             </div>
           </div>
         </div>
-        <div className="bg-brand-accent/10 p-2 rounded-full">
-          <ShieldCheck className="w-5 h-5 text-brand-primary" />
+        <div className="bg-pink-50 p-2 rounded-full border border-pink-100 shadow-sm">
+          <ShieldCheck className="w-5 h-5 text-pink-600" />
         </div>
       </header>
 
@@ -110,17 +116,17 @@ export default function AiVisaChatPage() {
                 msg.role === 'user' ? "flex-row-reverse" : "flex-row"
               )}>
                 <div className={cn(
-                  "w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center shadow-sm",
-                  msg.role === 'assistant' ? "bg-brand-primary text-white" : "bg-white border text-slate-400"
+                  "w-9 h-9 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-md border-2 border-white",
+                  msg.role === 'assistant' ? "bg-slate-900 text-white" : "bg-white text-slate-400"
                 )}>
-                  {msg.role === 'assistant' ? <Bot size={18} /> : <User size={18} />}
+                  {msg.role === 'assistant' ? <Bot size={20} /> : <User size={20} />}
                 </div>
                 <div className="space-y-1">
                   <div className={cn(
-                    "px-4 py-3 rounded-[1.5rem] text-[15px] leading-relaxed font-medium shadow-sm",
+                    "px-4 py-3 rounded-[1.5rem] text-[15px] leading-relaxed font-semibold shadow-sm",
                     msg.role === 'assistant' 
                       ? "bg-white text-slate-800 rounded-tl-none border border-slate-100" 
-                      : "bg-brand-primary text-white rounded-tr-none"
+                      : "bg-pink-600 text-white rounded-tr-none shadow-pink-100"
                   )}>
                     {msg.content}
                   </div>
@@ -142,39 +148,39 @@ export default function AiVisaChatPage() {
             animate={{ opacity: 1 }}
             className="flex gap-3"
           >
-            <div className="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center">
-              <Bot size={18} />
+            <div className="w-9 h-9 rounded-2xl bg-slate-900 text-white flex items-center justify-center border-2 border-white shadow-md">
+              <Bot size={20} />
             </div>
-            <div className="bg-white border border-slate-100 px-4 py-3 rounded-[1.5rem] rounded-tl-none shadow-sm flex gap-1">
-              <span className="w-1.5 h-1.5 bg-slate-200 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-1.5 h-1.5 bg-slate-200 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-1.5 h-1.5 bg-slate-200 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            <div className="bg-white border border-slate-100 px-4 py-3 rounded-[1.5rem] rounded-tl-none shadow-sm flex gap-1.5 items-center">
+              <span className="w-1.5 h-1.5 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-1.5 h-1.5 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-1.5 h-1.5 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
             </div>
           </motion.div>
         )}
       </div>
 
       {/* Input Area */}
-      <footer className="p-4 bg-white border-t safe-area-pb">
-        <div className="flex gap-2 items-center bg-slate-50 p-1 rounded-full border border-slate-200 pr-2">
+      <footer className="p-4 bg-white border-t pb-8">
+        <div className="flex gap-2 items-center bg-slate-50 p-1.5 rounded-[2rem] border border-slate-200 pr-2 focus-within:ring-2 focus-within:ring-pink-100 transition-all">
           <Input 
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="비자 선배에게 질문하기..."
-            className="border-none bg-transparent focus-visible:ring-0 shadow-none h-10 font-medium text-slate-600"
+            placeholder="선배, 나 궁금한 게 있는데..."
+            className="border-none bg-transparent focus-visible:ring-0 shadow-none h-10 font-bold text-slate-700 placeholder:text-slate-300"
           />
           <Button 
             onClick={handleSend}
             disabled={!input.trim() || isTyping}
             size="icon" 
-            className="rounded-full bg-brand-primary hover:bg-slate-800 transition-all shrink-0 w-10 h-10 shadow-lg shadow-slate-200"
+            className="rounded-full bg-slate-900 hover:bg-black transition-all shrink-0 w-10 h-10 shadow-lg shadow-slate-200"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4 text-white" />
           </Button>
         </div>
-        <p className="text-[10px] text-center text-slate-300 font-bold uppercase tracking-widest mt-3">
-          AI guidance is for reference only. Always verify with official sources.
+        <p className="text-[9px] text-center text-slate-300 font-black uppercase tracking-[0.2em] mt-4">
+          WalaWala Intelligence Square • 2026 Edition
         </p>
       </footer>
     </div>

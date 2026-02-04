@@ -4,16 +4,21 @@ import { NextResponse } from 'next/server'
 // ⚠️ 중요: 이 API는 로컬 개발 환경이나 관리자 권한이 있는 상태에서만 실행해야 합니다.
 // .env.local 파일에 SUPABASE_SERVICE_ROLE_KEY가 있어야 합니다.
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !key) {
+    throw new Error('Supabase credentials are missing')
+  }
+
+  return createClient(url, key, {
     auth: {
       autoRefreshToken: false,
       persistSession: false
     }
-  }
-)
+  })
+}
 
 const NATIONALITIES = ['Vietnam', 'China', 'Nepal', 'Uzbekistan', 'Mongolia', 'Philippines', 'USA', 'Japan'];
 const VISAS = ['D-2', 'D-10', 'E-7', 'E-9', 'F-2', 'F-4', 'H-2'];
@@ -55,9 +60,11 @@ export async function GET() {
     return NextResponse.json({ error: 'SUPABASE_SERVICE_ROLE_KEY is missing' }, { status: 500 });
   }
 
+  const supabaseAdmin = getSupabaseAdmin();
+
   try {
-    const createdUsers = [];
-    
+    const createdUsers: string[] = [];
+
     // 1. Virtual Persona Seeding (100 Users)
     for (let i = 0; i < 100; i++) {
       const email = `virtual_user_${Date.now()}_${i}@walawala.test`;
@@ -100,7 +107,7 @@ export async function GET() {
     const posts = [];
     for (let i = 0; i < 50; i++) {
       if (createdUsers.length === 0) break;
-      
+
       const authorId = getRandomElement(createdUsers);
       const title = getRandomElement(SAMPLE_POST_TITLES);
       const content = getRandomElement(SAMPLE_CONTENTS);
@@ -122,36 +129,36 @@ export async function GET() {
 
     // 3. Comments (100 Comments) - 로직 개선: 게시글 카테고리에 맞는 유저가 댓글을 달 확률을 높임
     const { data: createdPosts } = await supabaseAdmin.from('posts').select('id, category');
-    
-    if (createdPosts && createdPosts.length > 0) {
-        const comments = [];
-        const COMMENT_TEMPLATES = {
-            Visa: ["정말 중요한 정보네요! 감사합니다.", "저도 어제 비자 센터 다녀왔는데 비슷했어요.", "혹시 서류 준비 기간은 얼마나 걸리셨나요?"],
-            Life: ["와 여기 저도 가봤는데 진짜 맛있어요!", "한국 생활 적응하기 힘드네요 ㅠㅠ 같이 힘내요!", "이런 꿀팁이 있었다니.. 감사합니다."],
-            Job: ["공고 링크 알 수 있을까요?", "비자 지원도 해주는 회사인가요?", "정보 공유 감사합니다. 지원해봐야겠네요!"],
-            Meetup: ["저 참여하고 싶어요!", "장소가 어디인가요?", "주말이면 무조건 갑니다!"]
-        };
 
-        for (let i=0; i < 150; i++) {
-             const authorId = getRandomElement(createdUsers);
-             const randomPost = getRandomElement(createdPosts);
-             const category = randomPost.category as keyof typeof COMMENT_TEMPLATES;
-             
-             comments.push({
-                 post_id: randomPost.id,
-                 author_id: authorId,
-                 content: getRandomElement(COMMENT_TEMPLATES[category] || COMMENT_TEMPLATES.Life),
-                 created_at: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
-             });
-        }
-        
-        const { error: commentError } = await supabaseAdmin.from('comments').insert(comments);
-        if (commentError) console.error('Comment insert error:', commentError);
+    if (createdPosts && createdPosts.length > 0) {
+      const comments = [];
+      const COMMENT_TEMPLATES = {
+        Visa: ["정말 중요한 정보네요! 감사합니다.", "저도 어제 비자 센터 다녀왔는데 비슷했어요.", "혹시 서류 준비 기간은 얼마나 걸리셨나요?"],
+        Life: ["와 여기 저도 가봤는데 진짜 맛있어요!", "한국 생활 적응하기 힘드네요 ㅠㅠ 같이 힘내요!", "이런 꿀팁이 있었다니.. 감사합니다."],
+        Job: ["공고 링크 알 수 있을까요?", "비자 지원도 해주는 회사인가요?", "정보 공유 감사합니다. 지원해봐야겠네요!"],
+        Meetup: ["저 참여하고 싶어요!", "장소가 어디인가요?", "주말이면 무조건 갑니다!"]
+      };
+
+      for (let i = 0; i < 150; i++) {
+        const authorId = getRandomElement(createdUsers);
+        const randomPost = getRandomElement(createdPosts);
+        const category = randomPost.category as keyof typeof COMMENT_TEMPLATES;
+
+        comments.push({
+          post_id: randomPost.id,
+          author_id: authorId,
+          content: getRandomElement(COMMENT_TEMPLATES[category] || COMMENT_TEMPLATES.Life),
+          created_at: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+        });
+      }
+
+      const { error: commentError } = await supabaseAdmin.from('comments').insert(comments);
+      if (commentError) console.error('Comment insert error:', commentError);
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      message: `Created ${createdUsers.length} users, ${posts.length} posts, and comments.` 
+    return NextResponse.json({
+      success: true,
+      message: `Created ${createdUsers.length} users, ${posts.length} posts, and comments.`
     });
 
   } catch (error: any) {

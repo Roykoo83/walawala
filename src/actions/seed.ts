@@ -71,8 +71,8 @@ export async function seedFullContents() {
   if (postError || !createdPosts) return { success: false, error: postError?.message }
 
   // 3. 인터랙션 (좋아요, 댓글) 주입
-  const likesToInsert = []
-  const commentsToInsert = []
+  const likesToInsert: any[] = []
+  const commentsToInsert: any[] = []
 
   for (const post of createdPosts) {
     const interactionCount = Math.floor(Math.random() * 8) + 3 // 3~10개
