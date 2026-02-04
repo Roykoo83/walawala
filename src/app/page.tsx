@@ -15,9 +15,12 @@ export default function Home() {
       {/* Navigation */}
       <header className="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg overflow-hidden border">
+              <img src="/logo.jpg" alt="WalaWala Logo" className="object-cover w-full h-full" />
+            </div>
             <span className="text-xl font-bold text-brand-primary">WalaWala</span>
-          </div>
+          </Link>
           <div className="flex gap-4">
             <Link href="/login">
               <span className="text-sm font-medium text-gray-600 hover:text-brand-primary px-3 py-2">Login</span>
@@ -40,8 +43,11 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="container mx-auto max-w-3xl"
+          className="container mx-auto max-w-3xl flex flex-col items-center"
         >
+          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-xl border-4 border-white mb-8 transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+            <img src="/logo.jpg" alt="WalaWala Logo" className="object-cover w-full h-full" />
+          </div>
           <span className="inline-block py-1 px-3 rounded-full bg-brand-accent/20 text-brand-dark text-xs font-bold mb-6 tracking-wide text-brand-primary">
             FOR FOREIGNERS IN KOREA 🇰🇷
           </span>

@@ -14,10 +14,15 @@ export default async function CommunityPage() {
       {/* Sticky Top Bar: The Hub of Activity */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-100 px-4 py-3 shadow-[0_1px_10px_rgba(0,0,0,0.02)]">
         <div className="flex justify-between items-center max-w-md mx-auto">
-          <div className="flex flex-col -space-y-1">
-            <h1 className="text-xl font-[1000] text-slate-900 tracking-tighter italic">WalaWala</h1>
-            <div className="h-1 w-6 bg-pink-500 rounded-full" />
-          </div>
+          <Link href="/community" className="flex items-center gap-2">
+            <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-slate-100 shadow-sm">
+              <img src="/logo.jpg" alt="WalaWala Logo" className="object-cover w-full h-full" />
+            </div>
+            <div className="flex flex-col -space-y-1">
+              <h1 className="text-xl font-[1000] text-slate-900 tracking-tighter italic">WalaWala</h1>
+              <div className="h-1 w-6 bg-pink-500 rounded-full" />
+            </div>
+          </Link>
           <LiveStatus count={100 + Math.floor(Math.random() * 20)} />
           <div className="flex gap-3">
             <div className="bg-slate-50 p-2 rounded-full border border-slate-100">
