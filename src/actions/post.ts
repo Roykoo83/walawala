@@ -100,6 +100,24 @@ export async function createPost(formData: FormData) {
         return { error: 'All fields are required' }
     }
 
+    // [Bug Fix] 프로필이 없는 경우 자동 생성 (트리거 누락 대비)
+    const { data: profile } = await supabase.from('profiles').select('id').eq('id', user.id).single()
+
+    if (!profile) {
+        const { error: profileError } = await supabase.from('profiles').insert({
+            id: user.id,
+            email: user.email,
+            nickname: user.email?.split('@')[0] || 'Anonymous',
+            nationality: 'Global', // 기본값
+            visa_type: 'Unknown'   // 기본값
+        })
+
+        if (profileError) {
+            console.error('Error creating missing profile:', profileError)
+            // 프로필 생성 실패 시에도 진행 시도 (RLS 등 원인일 수 있음)
+        }
+    }
+
     const { error } = await supabase.from('posts').insert({
         author_id: user.id,
         title,
