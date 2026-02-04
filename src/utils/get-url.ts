@@ -1,3 +1,8 @@
+/**
+ * WalaWala Production URL Helper
+ * This helper ensures that the application always redirects to the correct
+ * production or development URL, avoiding localhost issues on Vercel.
+ */
 export const getURL = (path: string = '') => {
     let url = ''
 
