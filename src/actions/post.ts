@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { ensureProfile } from './profile'
 
 export async function getPosts() {
     const supabase = await createClient()
@@ -101,22 +102,7 @@ export async function createPost(formData: FormData) {
     }
 
     // [Bug Fix] 프로필이 없는 경우 자동 생성 (트리거 누락 대비)
-    const { data: profile } = await supabase.from('profiles').select('id').eq('id', user.id).single()
-
-    if (!profile) {
-        const { error: profileError } = await supabase.from('profiles').insert({
-            id: user.id,
-            email: user.email,
-            nickname: user.email?.split('@')[0] || 'Anonymous',
-            nationality: 'Global', // 기본값
-            visa_type: 'Unknown'   // 기본값
-        })
-
-        if (profileError) {
-            console.error('Error creating missing profile:', profileError)
-            // 프로필 생성 실패 시에도 진행 시도 (RLS 등 원인일 수 있음)
-        }
-    }
+    await ensureProfile(user.id, user.email)
 
     const { error } = await supabase.from('posts').insert({
         author_id: user.id,
@@ -156,6 +142,7 @@ export async function toggleLike(postId: string) {
         await supabase.from('likes').delete().eq('id', existingLike.id)
     } else {
         // Like
+        await ensureProfile(user.id, user.email)
         await supabase.from('likes').insert({
             post_id: postId,
             user_id: user.id
@@ -250,6 +237,7 @@ export async function toggleBookmark(postId: string) {
         return { bookmarked: false }
     } else {
         // 북마크 추가
+        await ensureProfile(user.id, user.email)
         await supabase.from('bookmarks').insert({
             post_id: postId,
             user_id: user.id,

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { ensureProfile } from './profile'
 
 export interface Course {
     id: string
@@ -103,6 +104,9 @@ export async function createCourseComment(formData: FormData) {
     if (!user) {
         return { error: '댓글을 작성하려면 로그인이 필요합니다.' }
     }
+
+    // [Fix] 프로필 존재 보장
+    await ensureProfile(user.id, user.email)
 
     const content = formData.get('content') as string
     const courseId = formData.get('courseId') as string

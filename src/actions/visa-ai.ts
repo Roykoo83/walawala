@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { ensureProfile } from './profile'
 
 // 환경 변수에서 API 키 로드
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
@@ -13,6 +14,9 @@ export async function askVisaSenior(message: string, history: any[] = []) {
   if (!user) {
     return { error: '로그인이 필요해요. 선배랑 대화하려면 먼저 로그인해줄래?' }
   }
+
+  // [Fix] 프로필 존재 보장
+  await ensureProfile(user.id, user.email)
 
   if (!process.env.GEMINI_API_KEY) {
     return { error: '선배가 지금 외출 중이에요. (API 키가 설정되지 않았습니다.)' }
@@ -54,7 +58,7 @@ export async function askVisaSenior(message: string, history: any[] = []) {
 
     // 3. Gemini API 호출
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
-    
+
     const chat = model.startChat({
       history: history.map(h => ({
         role: h.role === 'user' ? 'user' : 'model',
@@ -69,36 +73,36 @@ export async function askVisaSenior(message: string, history: any[] = []) {
       { text: systemPrompt },
       { text: message }
     ])
-    
+
     const response = await result.response
     const text = response.text()
 
     // 4. 인터뷰 내역 기록 (비동기로 실행하여 응답 속도 최적화 가능)
     // 여기서는 간단하게 profile 기반으로 가장 최근 인터뷰를 업데이트하거나 새로 생성함
     const { data: interview } = await supabase
-        .from('visa_interviews')
-        .select('id, interview_data')
-        .eq('user_id', user.id)
-        .eq('visa_type', profile?.target_visa || 'General')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single()
+      .from('visa_interviews')
+      .select('id, interview_data')
+      .eq('user_id', user.id)
+      .eq('visa_type', profile?.target_visa || 'General')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
 
     const newHistory = [...history, { role: 'user', content: message }, { role: 'model', content: text }]
 
     if (interview) {
-        await supabase
-            .from('visa_interviews')
-            .update({ interview_data: newHistory })
-            .eq('id', interview.id)
+      await supabase
+        .from('visa_interviews')
+        .update({ interview_data: newHistory })
+        .eq('id', interview.id)
     } else {
-        await supabase
-            .from('visa_interviews')
-            .insert({
-                user_id: user.id,
-                visa_type: profile?.target_visa || 'General',
-                interview_data: newHistory
-            })
+      await supabase
+        .from('visa_interviews')
+        .insert({
+          user_id: user.id,
+          visa_type: profile?.target_visa || 'General',
+          interview_data: newHistory
+        })
     }
 
     return { content: text }

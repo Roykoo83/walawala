@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
+import { ensureProfile } from './profile'
 
 const postSchema = z.object({
   title: z.string().min(1),
@@ -24,6 +25,9 @@ export async function createPost(formData: FormData) {
   if (!user) {
     return { error: '게시글을 작성하려면 로그인이 필요합니다.' }
   }
+
+  // [Fix] 프로필 존재 보장
+  await ensureProfile(user.id, user.email)
 
   const title = formData.get('title') as string
   const content = formData.get('content') as string
@@ -88,6 +92,9 @@ export async function createComment(formData: FormData) {
     return { error: '댓글을 작성하려면 로그인이 필요합니다.' }
   }
 
+  // [Fix] 프로필 존재 보장
+  await ensureProfile(user.id, user.email)
+
   const data = {
     content: formData.get('content') as string,
     postId: formData.get('postId') as string,
@@ -115,7 +122,7 @@ export async function createComment(formData: FormData) {
 
 export async function getPosts(page: number = 0, limit: number = 10, category?: string) {
   const supabase = await createClient()
-  
+
   // 게시글 정보와 함께 작성자 프로필, 댓글 수, 좋아요 수를 한 번에 조회
   let query = supabase
     .from('posts')
@@ -223,6 +230,9 @@ export async function toggleLike(postId: string) {
     return { liked: false }
   } else {
     // Like
+    // [Fix] 프로필 존재 보장
+    await ensureProfile(user.id, user.email)
+
     await supabase
       .from('likes')
       .insert({ post_id: postId, user_id: user.id })

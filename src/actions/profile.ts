@@ -38,3 +38,31 @@ export async function updateProfile(formData: FormData) {
     revalidatePath('/visa')
     return { success: true }
 }
+
+export async function ensureProfile(userId: string, email?: string) {
+    const supabase = await createClient()
+
+    // Check if profile exists
+    const { data: profile } = await supabase.from('profiles').select('id').eq('id', userId).single()
+
+    if (profile) return true
+
+    // Create profile if missing
+    console.log(`[ensureProfile] Creating missing profile for user ${userId}`)
+
+    const { error } = await supabase.from('profiles').insert({
+        id: userId,
+        email: email,
+        nickname: email?.split('@')[0] || 'User',
+        nationality: 'Global',
+        visa_type: 'Unknown',
+        created_at: new Date().toISOString()
+    })
+
+    if (error) {
+        console.error('[ensureProfile] Failed to create profile:', error)
+        return false
+    }
+
+    return true
+}
