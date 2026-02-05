@@ -55,6 +55,12 @@ export async function getCourses(category?: string) {
 
 // 강좌 상세 조회
 export async function getCourseById(id: string) {
+    // UUID 형식이 아니면 DB 조회 없이 바로 null 반환 (샘플 데이터 대응)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(id)) {
+        return null;
+    }
+
     const supabase = await createClient()
 
     const { data: course, error } = await supabase
@@ -64,7 +70,10 @@ export async function getCourseById(id: string) {
         .single()
 
     if (error) {
-        console.error('Error fetching course:', error)
+        // 데이터가 없는 경우는 에러 로그를 남기지 않음
+        if (error.code !== 'PGRST116') {
+            console.error('Error fetching course:', error)
+        }
         return null
     }
 

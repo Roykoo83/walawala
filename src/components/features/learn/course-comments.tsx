@@ -108,7 +108,9 @@ export function CourseComments({ courseId, comments, currentUserId }: CourseComm
                                         {comment.profiles?.nationality || ''}
                                     </span>
                                     <span className="text-[10px] text-gray-400">
-                                        {new Date(comment.created_at).toLocaleDateString()}
+                                        <span suppressHydrationWarning>
+                                            {new Date(comment.created_at).toLocaleDateString()}
+                                        </span>
                                     </span>
                                 </div>
                                 <p className="text-sm text-gray-600">{comment.content}</p>

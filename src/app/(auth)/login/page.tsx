@@ -7,9 +7,20 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { toast } from 'sonner'
 
 export default function LoginPage() {
+  const searchParams = useSearchParams()
+  const errorParam = searchParams.get('error')
+
+  useEffect(() => {
+    if (errorParam === 'auth-callback-failed') {
+      toast.error('인증 처리 중 오류가 발생했습니다. 다시 시도해주세요.')
+    }
+  }, [errorParam])
+
   const [state, action, isPending] = useActionState(async (_prev: any, formData: FormData) => {
     return await login(formData)
   }, null)

@@ -104,14 +104,14 @@ export function PostList({ initialPosts, userId }: PostListProps) {
             setHasMore(filteredPosts.length >= 10)
             setLoading(false)
         }
-        
+
         // 커스텀 이벤트나 상태 변경을 통해 카테고리 필터링이 일어날 때 호출
         // 현재는 window 이벤트를 예시로 들거나, 부모로부터 props를 받을 수 있음
         const handleCategoryChange = (e: any) => {
             setActiveCategory(e.detail)
         }
         window.addEventListener('categoryChange', handleCategoryChange)
-        
+
         updateCategory()
 
         return () => window.removeEventListener('categoryChange', handleCategoryChange)
@@ -120,7 +120,7 @@ export function PostList({ initialPosts, userId }: PostListProps) {
     return (
         <div className="relative overflow-visible">
             {/* Pull to Refresh Indicator */}
-            <motion.div 
+            <motion.div
                 style={{ y: y, opacity: opacity }}
                 className="absolute -top-12 left-0 right-0 flex justify-center pointer-events-none z-0"
             >
@@ -129,7 +129,7 @@ export function PostList({ initialPosts, userId }: PostListProps) {
                 </motion.div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
                 style={{ y }}
                 drag="y"
                 dragConstraints={{ top: 0, bottom: 0 }}
@@ -164,30 +164,30 @@ export function PostList({ initialPosts, userId }: PostListProps) {
                                             <span className="font-black text-sm text-slate-900 tracking-tight">
                                                 {post.profiles?.nickname || 'Anonymous'}
                                             </span>
-                                            <ResidentBadge 
-                                                nationality={post.profiles?.nationality} 
-                                                visaType={post.profiles?.visa_type} 
+                                            <ResidentBadge
+                                                nationality={post.profiles?.nationality}
+                                                visaType={post.profiles?.visa_type}
                                             />
                                         </div>
                                     </div>
-                                    <span className="text-[10px] font-black text-slate-300 bg-slate-50 px-2 py-1 rounded-full uppercase tracking-tighter">
+                                    <span suppressHydrationWarning className="text-[10px] font-black text-slate-300 bg-slate-50 px-2 py-1 rounded-full uppercase tracking-tighter">
                                         {new Date(post.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
                             </CardHeader>
-                            
+
                             <Link href={`/community/${post.id}`}>
                                 <CardContent className="p-6">
                                     <h4 className="text-xl font-black text-slate-900 mb-3 leading-tight tracking-tight">
                                         {post.title}
                                     </h4>
-                                    
+
                                     {post.images && post.images.length > 0 && (
                                         <div className="relative w-full aspect-[4/3] mb-5 rounded-[2rem] overflow-hidden bg-slate-50 border border-slate-100 shadow-inner">
-                                            <Image 
-                                                src={post.images[0]} 
-                                                alt={post.title} 
-                                                fill 
+                                            <Image
+                                                src={post.images[0]}
+                                                alt={post.title}
+                                                fill
                                                 className="object-cover hover:scale-105 transition-transform duration-700"
                                                 sizes="(max-width: 768px) 100vw, 500px"
                                             />

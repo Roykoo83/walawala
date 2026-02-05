@@ -37,16 +37,16 @@ export function CommentSection({ postId, comments, currentUserId }: CommentSecti
   return (
     <div className="mt-8 space-y-6">
       <h3 className="text-xl font-semibold">댓글 ({comments.length})</h3>
-      
+
       {/* 댓글 작성 폼 */}
       <Card>
         <CardContent className="pt-6">
           <form action={action} className="flex gap-2">
             <input type="hidden" name="postId" value={postId} />
-            <Input 
-              name="content" 
-              placeholder="댓글을 작성하세요..." 
-              required 
+            <Input
+              name="content"
+              placeholder="댓글을 작성하세요..."
+              required
               disabled={isPending}
             />
             <Button type="submit" disabled={isPending}>
@@ -69,12 +69,12 @@ export function CommentSection({ postId, comments, currentUserId }: CommentSecti
                   {comment.profiles?.nickname || comment.profiles?.email || 'Unknown'}
                 </span>
                 <span>•</span>
-                <span>{new Date(comment.created_at).toLocaleDateString()}</span>
+                <span suppressHydrationWarning>{new Date(comment.created_at).toLocaleDateString()}</span>
               </div>
               {currentUserId === comment.author_id && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="h-auto p-1 text-red-500 hover:text-red-700 hover:bg-red-50"
                   onClick={() => handleDelete(comment.id)}
                 >
