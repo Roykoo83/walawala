@@ -11,7 +11,9 @@ import { useActionState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 
-export default function LoginPage() {
+import { Suspense } from 'react'
+
+function LoginPageContent() {
   const searchParams = useSearchParams()
   const errorParam = searchParams.get('error')
 
@@ -76,5 +78,13 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex h-screen w-full items-center justify-center">Loading...</div>}>
+      <LoginPageContent />
+    </Suspense>
   )
 }
