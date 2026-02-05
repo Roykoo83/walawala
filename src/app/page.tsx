@@ -106,20 +106,20 @@ export default function Home() {
             <h2 className="text-2xl font-bold text-gray-900">Live from the Plaza</h2>
             <Link href="/community" className="text-sm font-medium text-brand-primary hover:underline">View all posts</Link>
           </div>
-          
+
           <div className="space-y-6">
-            <FeedCard 
-              name="Minh" 
-              country="VN" 
-              visa="E-7" 
+            <FeedCard
+              name="Minh"
+              country="VN"
+              visa="E-7"
               content="드디어 E-7 비자 승인받았습니다! 서류 준비가 정말 힘들었지만 WalaWala 덕분에 무사히 통과했네요. 궁금한 점 있으면 물어보세요! 😊"
               likes={234}
               comments={45}
             />
-            <FeedCard 
-              name="Sarah" 
-              country="US" 
-              visa="D-2" 
+            <FeedCard
+              name="Sarah"
+              country="US"
+              visa="D-2"
               content="오늘 신촌에서 만날 분 계신가요? 한국어 연습도 하고 맛있는 것도 먹고 싶어요! 🍜"
               likes={12}
               comments={8}

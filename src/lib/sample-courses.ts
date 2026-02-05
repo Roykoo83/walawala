@@ -3,7 +3,7 @@ import type { Course } from '@/actions/learn'
 // 샘플 강좌 데이터 (DB가 비어있을 때 사용)
 export const SAMPLE_COURSES: Course[] = [
     {
-        id: 'sample-1',
+        id: '11111111-1111-1111-1111-111111111111',
         title: 'KIIP Level 1: Korean Culture Basics',
         description: 'Learn about Korean greetings, holidays, and daily customs. Perfect for beginners starting their Korean journey.',
         category: 'kiip',
@@ -15,7 +15,7 @@ export const SAMPLE_COURSES: Course[] = [
         created_at: new Date().toISOString(),
     },
     {
-        id: 'sample-2',
+        id: '22222222-2222-2222-2222-222222222222',
         title: 'KIIP Level 2: Korean History',
         description: 'Explore the rich history of Korea from ancient times to modern era. Required for KIIP Level 2 exam.',
         category: 'kiip',
@@ -27,7 +27,7 @@ export const SAMPLE_COURSES: Course[] = [
         created_at: new Date().toISOString(),
     },
     {
-        id: 'sample-3',
+        id: '33333333-3333-3333-3333-333333333333',
         title: 'TOPIK Vocabulary: Essential 1000 Words',
         description: 'Master the most frequently used Korean words for TOPIK exam preparation.',
         category: 'korean',
@@ -39,7 +39,7 @@ export const SAMPLE_COURSES: Course[] = [
         created_at: new Date().toISOString(),
     },
     {
-        id: 'sample-4',
+        id: '44444444-4444-4444-4444-444444444444',
         title: 'Korean Pronunciation Guide',
         description: 'Perfect your Korean pronunciation with native speaker examples and practice exercises.',
         category: 'korean',
@@ -51,7 +51,7 @@ export const SAMPLE_COURSES: Course[] = [
         created_at: new Date().toISOString(),
     },
     {
-        id: 'sample-5',
+        id: '55555555-5555-5555-5555-555555555555',
         title: 'Understanding Korean Workplace Culture',
         description: 'Essential guide for working in Korean companies. Learn about hierarchy, etiquette, and communication.',
         category: 'culture',
@@ -63,7 +63,7 @@ export const SAMPLE_COURSES: Course[] = [
         created_at: new Date().toISOString(),
     },
     {
-        id: 'sample-6',
+        id: '66666666-6666-6666-6666-666666666666',
         title: 'KIIP Level 5: Immigration & Citizenship',
         description: 'Advanced content covering Korean immigration law, visa types, and naturalization process.',
         category: 'kiip',

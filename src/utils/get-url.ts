@@ -4,6 +4,14 @@
  * production or development URL, avoiding localhost issues on Vercel.
  */
 export const getURL = (path: string = '') => {
+    // 0. 로컬 개발 환경 강제 (개발 중 리다이렉트 꼬임 방지)
+    if (process.env.NODE_ENV === 'development') {
+        const baseUrl = 'http://localhost:3000'
+        const normalizedPath = path ? (path.startsWith('/') ? path : `/${path}`) : ''
+        const finalUrl = `${baseUrl}${normalizedPath}`
+        return finalUrl
+    }
+
     let url = ''
 
     // 1. Production Domain (사용자 설정 값)
@@ -18,7 +26,7 @@ export const getURL = (path: string = '') => {
     else if (process.env.NEXT_PUBLIC_VERCEL_URL && process.env.NEXT_PUBLIC_VERCEL_URL.trim() !== '') {
         url = process.env.NEXT_PUBLIC_VERCEL_URL
     }
-    // 4. 로컬호스트 Fallback (개발 환경이거나 위 값이 모두 없을 때)
+    // 4. 로컬호스트 Fallback (혹시 모를 상황 대비)
     else {
         url = 'http://localhost:3000'
     }
